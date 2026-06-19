@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const posts = (await getCollection('blog-en', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<BaseLayout
+  title="Conduit AI Blog — AI Tools & Workflow Guides"
+  description="Hands-on guides for Claude Code, Codex and Cursor, plus model selection and cost optimization tips to use AI smarter and cheaper."
+  lang="en"
+  keywords={["AI tools tutorial", "Claude Code", "pay as you go API", "LLM cost optimization"]}
+>
+  <section class="hero">
+    <h1>Use AI smarter, for less</h1>
+    <p>Hands-on guides for Claude Code, Codex & Cursor · model selection · workflow automation · cost optimization.<br />Practical first — fewer pitfalls, lower bills.</p>
+  </section>
+
+  <section class="list">
+    <h2>Latest posts</h2>
+    {posts.length === 0 ? (
+      <p class="empty">Posts coming soon ✨</p>
+    ) : (
+      <ul>
+        {posts.map((p) => (
+          <li>
+            <a href={`${base}/en/blog/${p.slug}`}>
+              <span class="t">{p.data.title}</span>
+              <span class="d">{p.data.description}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.2rem 1rem; }
+  .hero h1 { font-size: 2.2rem; letter-spacing: -0.03em; margin: 0 0 0.8rem; }
+  .hero p { color: var(--text-soft); font-size: 1.05rem; margin: 0; }
+  .list { max-width: 760px; margin: 0 auto; padding: 1.5rem 1.2rem; }
+  .list h2 { font-size: 1.2rem; margin: 0 0 1rem; }
+  .list ul { list-style: none; padding: 0; margin: 0; }
+  .list li { border-top: 1px solid var(--border); }
+  .list a { display: flex; flex-direction: column; gap: 0.25rem; padding: 1rem 0; text-decoration: none; }
+  .list .t { color: var(--text); font-weight: 600; font-size: 1.05rem; }
+  .list .d { color: var(--text-faint); font-size: 0.9rem; }
+  .list a:hover .t { color: var(--accent); }
+  .empty { color: var(--text-faint); }
+</style>

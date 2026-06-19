@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wenxwux.github.io/conduit-blog/sitemap-index.xml

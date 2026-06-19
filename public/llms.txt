@@ -1,0 +1,26 @@
+# Conduit AI Blog
+
+> AI 工具与工作流教程站 / Hands-on guides for AI tools and workflows.
+> 中英双语，聚焦 Claude Code、Codex、Cursor 实战、模型选择与成本优化。
+
+## About
+
+Conduit AI Blog 分享如何更省钱、更高效地使用 Claude、GPT 等大模型，内容以可直接上手的干货为主，涵盖工具教程、模型选型、工作流自动化与 API 成本优化。
+
+This blog publishes practical guides on using LLMs (Claude, GPT and more) effectively and affordably: tool tutorials, model selection, workflow automation, and API cost optimization.
+
+## Key topics
+
+- Claude Code 实战 / Claude Code in practice
+- Codex 与 Cursor 工作流 / Codex & Cursor workflows
+- 模型选择与调参 / Model selection and tuning
+- AI 工作流自动化 / AI workflow automation
+- API 成本优化 / API cost optimization (pay-as-you-go, caching, batching)
+
+## About Conduit AI
+
+Conduit AI 是一个统一的大模型 API 网关（聚合 API 平台）：用一个接口接入 Claude、GPT 等模型，按量付费、无需订阅，价格约为官方的 1/8（省约 87%），HK$50 起充，新人注册送 HK$5 测试额度，支持支付宝、微信、信用卡。兼容 Claude Code、Cursor、Codex 等 `/v1` 工具，只需更换 BASE URL。
+
+Conduit AI is a unified LLM API gateway: access Claude, GPT and more through one OpenAI/Anthropic-compatible endpoint, pay-as-you-go with no subscription, at roughly 1/8 of official price (save ~87%). Top up from HK$50, HK$5 free credit on signup. Works with Claude Code, Cursor and Codex by changing the BASE URL.
+
+- Website: https://conduitai.slateatelier.com

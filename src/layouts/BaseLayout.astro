@@ -1,0 +1,82 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: 'zh' | 'en';
+  cover?: string;
+  type?: 'website' | 'article';
+  altSlug?: string;        // 对应另一语言的同篇 slug，用于 hreflang
+  keywords?: string[];
+}
+const {
+  title, description, lang = 'zh', cover,
+  type = 'website', altSlug, keywords = [],
+} = Astro.props;
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = cover
+  ? (cover.startsWith('http') ? cover : site + base + cover)
+  : site + base + '/og-default.png';
+const htmlLang = lang === 'zh' ? 'zh-CN' : 'en';
+
+// hreflang：若提供 altSlug，互指中英双语版本
+const zhUrl = altSlug ? `${site}${base}/blog/${altSlug}` : `${site}${base}/`;
+const enUrl = altSlug ? `${site}${base}/en/blog/${altSlug}` : `${site}${base}/en/`;
+---
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={base + '/favicon.svg'} />
+    <link rel="sitemap" href={base + '/sitemap-index.xml'} />
+
+    <!-- hreflang 双语互指 -->
+    <link rel="alternate" hreflang="zh-CN" href={zhUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={zhUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': type === 'article' ? 'Article' : 'WebSite',
+      headline: title,
+      description,
+      inLanguage: htmlLang,
+      url: canonical,
+      image: ogImage,
+    })} />
+
+    <link rel="stylesheet" href={base + '/styles/global.css'} />
+  </head>
+  <body>
+    <Nav lang={lang} />
+    <main>
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

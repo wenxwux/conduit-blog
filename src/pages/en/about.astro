@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SoftCTA from '../../components/SoftCTA.astro';
+---
+<BaseLayout
+  title="About — Conduit AI Blog"
+  description="Conduit AI Blog focuses on hands-on AI tooling, model selection and cost optimization for individual developers."
+  lang="en"
+>
+  <article class="page">
+    <h1>About</h1>
+    <p>This blog shares practical ways to use AI tools — tips for Claude Code, Codex and Cursor, how to pick the right model, how to automate workflows, and how to cut costs.</p>
+    <p>The rule is simple: <strong>be useful first</strong>. Most of the content is hands-on; the platform only gets a natural mention where it fits.</p>
+    <h2>Who it's for</h2>
+    <ul>
+      <li>Individual developers and students who want Claude / GPT without overpaying</li>
+      <li>People using Claude Code / Cursor / Codex who want to ship faster and spend less</li>
+      <li>Anyone weighing which model to use and which billing actually saves money</li>
+    </ul>
+    <SoftCTA lang="en" />
+  </article>
+</BaseLayout>
+
+<style>
+  .page { max-width: 760px; margin: 0 auto; padding: 2rem 1.2rem; }
+  .page h1 { font-size: 1.9rem; margin: 0 0 1rem; }
+  .page h2 { font-size: 1.25rem; margin: 1.8rem 0 0.6rem; }
+  .page p { color: var(--text-soft); }
+  .page strong { color: var(--text); }
+  .page ul { color: var(--text-soft); padding-left: 1.3rem; }
+  .page li { margin: 0.4rem 0; }
+</style>

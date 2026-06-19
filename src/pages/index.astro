@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<BaseLayout
+  title="Conduit AI Blog — AI 工具与工作流教程"
+  description="分享 Claude Code、Codex、Cursor 等 AI 工具的实战教程、模型选择与成本优化技巧，帮你更省钱、更高效地用好 AI。"
+  lang="zh"
+  keywords={["AI 工具教程", "Claude Code", "按量付费 API", "AI 成本优化"]}
+>
+  <section class="hero">
+    <h1>用好 AI，省钱又高效</h1>
+    <p>Claude Code、Codex、Cursor 实战教程 · 模型选择 · 工作流自动化 · 成本优化。<br />真干货为主，少踩坑、多省钱。</p>
+  </section>
+
+  <section class="list">
+    <h2>最新文章</h2>
+    {posts.length === 0 ? (
+      <p class="empty">文章马上就来，敬请期待 ✨</p>
+    ) : (
+      <ul>
+        {posts.map((p) => (
+          <li>
+            <a href={`${base}/blog/${p.slug}`}>
+              <span class="t">{p.data.title}</span>
+              <span class="d">{p.data.description}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.2rem 1rem; }
+  .hero h1 { font-size: 2.2rem; letter-spacing: -0.03em; margin: 0 0 0.8rem; }
+  .hero p { color: var(--text-soft); font-size: 1.05rem; margin: 0; }
+  .list { max-width: 760px; margin: 0 auto; padding: 1.5rem 1.2rem; }
+  .list h2 { font-size: 1.2rem; margin: 0 0 1rem; }
+  .list ul { list-style: none; padding: 0; margin: 0; }
+  .list li { border-top: 1px solid var(--border); }
+  .list a { display: flex; flex-direction: column; gap: 0.25rem; padding: 1rem 0; text-decoration: none; }
+  .list .t { color: var(--text); font-weight: 600; font-size: 1.05rem; }
+  .list .d { color: var(--text-faint); font-size: 0.9rem; }
+  .list a:hover .t { color: var(--accent); }
+  .empty { color: var(--text-faint); }
+</style>

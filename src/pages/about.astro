@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SoftCTA from '../components/SoftCTA.astro';
+---
+<BaseLayout
+  title="关于 — Conduit AI Blog"
+  description="Conduit AI Blog 专注 AI 工具实战、模型选择与成本优化，帮个人开发者更省钱地用好 Claude、GPT 等模型。"
+  lang="zh"
+>
+  <article class="page">
+    <h1>关于本站</h1>
+    <p>这里分享 AI 工具的实战用法——Claude Code、Codex、Cursor 的技巧，模型怎么选，工作流怎么自动化，以及怎么把成本压下来。</p>
+    <p>原则很简单：<strong>先有用，再有我</strong>。绝大多数内容是能直接上手的干货，平台只在合适的地方自然提一句。</p>
+    <h2>适合谁看</h2>
+    <ul>
+      <li>想低成本用上 Claude / GPT 的个人开发者、学生、独立开发者</li>
+      <li>在用 Claude Code / Cursor / Codex，想提效、省 token 的人</li>
+      <li>纠结模型怎么选、计费怎么算更划算的人</li>
+    </ul>
+    <SoftCTA lang="zh" />
+  </article>
+</BaseLayout>
+
+<style>
+  .page { max-width: 760px; margin: 0 auto; padding: 2rem 1.2rem; }
+  .page h1 { font-size: 1.9rem; margin: 0 0 1rem; }
+  .page h2 { font-size: 1.25rem; margin: 1.8rem 0 0.6rem; }
+  .page p { color: var(--text-soft); }
+  .page strong { color: var(--text); }
+  .page ul { color: var(--text-soft); padding-left: 1.3rem; }
+  .page li { margin: 0.4rem 0; }
+</style>

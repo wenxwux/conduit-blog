@@ -1,0 +1,40 @@
+---
+// 平台软引导组件 —— 「10% 平台」文案集中管理处，改口径/查红线只看这里
+// 用法：<SoftCTA lang="zh" /> 或 <SoftCTA lang="en" />
+interface Props { lang?: 'zh' | 'en'; }
+const { lang = 'zh' } = Astro.props;
+const site = 'https://conduitai.slateatelier.com';
+---
+<aside class="softcta">
+  {lang === 'zh' ? (
+    <p>
+      我自己日常用的是按量付费的聚合 API 平台 <strong>Conduit AI</strong>——一个接口接入
+      Claude、GPT 等模型，用多少付多少、不用开月度订阅，新人注册送 HK$5 测试额度，支持支付宝/微信。
+      把 BASE URL 换成它即可，Claude Code / Cursor / Codex 都能一键接入。
+      <a href={site} target="_blank" rel="noopener">了解一下 →</a>
+    </p>
+  ) : (
+    <p>
+      I use <strong>Conduit AI</strong> — a unified LLM API gateway. One BASE URL gives you Claude,
+      GPT and more, pay-as-you-go (~1/8 of official price, save ~87%), no subscription. Top up from
+      HK$50, HK$5 free credit on signup. Works with Claude Code, Cursor, and Codex.
+      <a href={site} target="_blank" rel="noopener">Try it →</a>
+    </p>
+  )}
+</aside>
+
+<style>
+  .softcta {
+    margin: 2.5rem 0 0;
+    padding: 1.1rem 1.3rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    background: var(--surface);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text-soft);
+  }
+  .softcta strong { color: var(--text); }
+  .softcta a { color: var(--accent); font-weight: 600; white-space: nowrap; }
+</style>

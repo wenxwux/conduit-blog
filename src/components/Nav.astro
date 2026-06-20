@@ -1,18 +1,27 @@
 ---
-interface Props { lang?: 'zh' | 'en'; }
+import { LOCALES, localeOf, UI, type LocaleCode } from '../i18n/config';
+interface Props { lang?: LocaleCode; }
 const { lang = 'zh' } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const zhHome = base + '/';
-const enHome = base + '/en/';
-const nav = lang === 'zh'
-  ? [{ href: base + '/', label: '首页' }, { href: base + '/blog', label: '文章' }, { href: base + '/about', label: '关于' }]
-  : [{ href: base + '/en/', label: 'Home' }, { href: base + '/en/blog', label: 'Posts' }, { href: base + '/en/about', label: 'About' }];
+const t = UI[lang];
+const prefix = localeOf(lang).urlPrefix;
+const home = `${base}${prefix}/`;
+const nav = [
+  { href: `${base}${prefix}/`, label: t.nav.home },
+  { href: `${base}${prefix}/blog`, label: t.nav.posts },
+  { href: `${base}${prefix}/about`, label: t.nav.about },
+];
+const others = LOCALES.filter((l) => l.code !== lang);
 ---
 <header class="nav">
-  <a class="brand" href={lang === 'zh' ? zhHome : enHome}>Conduit AI <span>Blog</span></a>
+  <a class="brand" href={home}>Conduit AI <span>Blog</span></a>
   <nav>
     {nav.map((n) => <a href={n.href}>{n.label}</a>)}
-    <a class="lang" href={lang === 'zh' ? enHome : zhHome}>{lang === 'zh' ? 'EN' : '中文'}</a>
+    <span class="langs">
+      {others.map((l) => (
+        <a class="lang" href={`${base}${l.urlPrefix}/`}>{l.label}</a>
+      ))}
+    </span>
   </nav>
 </header>
 
@@ -20,11 +29,13 @@ const nav = lang === 'zh'
   .nav {
     display: flex; align-items: center; justify-content: space-between;
     max-width: 760px; margin: 0 auto; padding: 1.1rem 1.2rem;
+    flex-wrap: wrap; gap: 0.5rem;
   }
   .brand { font-weight: 800; font-size: 1.15rem; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
   .brand span { color: var(--accent); }
-  nav { display: flex; gap: 1.1rem; align-items: center; }
+  nav { display: flex; gap: 1.1rem; align-items: center; flex-wrap: wrap; }
   nav a { color: var(--text-soft); text-decoration: none; font-size: 0.92rem; }
   nav a:hover { color: var(--text); }
+  .langs { display: flex; gap: 0.4rem; align-items: center; }
   .lang { border: 1px solid var(--border); border-radius: 6px; padding: 0.15rem 0.5rem; font-size: 0.8rem; }
 </style>

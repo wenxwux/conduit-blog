@@ -11,8 +11,17 @@ const postSchema = z.object({
   draft: z.boolean().default(false),
 });
 
-// 中英分两个 collection，同 slug 互为双语对应
+// 五语各一个 collection，同 slug 互为译文对应
 const blog = defineCollection({ type: 'content', schema: postSchema });
 const blogEn = defineCollection({ type: 'content', schema: postSchema });
+const blogJa = defineCollection({ type: 'content', schema: postSchema });
+const blogKo = defineCollection({ type: 'content', schema: postSchema });
+const blogEs = defineCollection({ type: 'content', schema: postSchema });
 
-export const collections = { blog, 'blog-en': blogEn };
+export const collections = {
+  blog,
+  'blog-en': blogEn,
+  'blog-ja': blogJa,
+  'blog-ko': blogKo,
+  'blog-es': blogEs,
+};

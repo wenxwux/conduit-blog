@@ -1,7 +1,17 @@
 # Conduit AI Blog
 
 > AI 工具与工作流教程站 / Hands-on guides for AI tools and workflows.
-> 中英双语，聚焦 Claude Code、Codex、Cursor 实战、模型选择与成本优化。
+> 五语 / 5 languages，聚焦 Claude Code、Codex、Cursor 实战、模型选择与成本优化。
+
+## Languages
+
+本站提供五种语言，文章互为译文（同 slug 配对）。This blog is available in five languages; articles are mirrored across locales by shared slug.
+
+- 中文 (zh) — https://wenxwux.github.io/conduit-blog/
+- English (en) — https://wenxwux.github.io/conduit-blog/en/
+- 日本語 (ja) — https://wenxwux.github.io/conduit-blog/ja/
+- 한국어 (ko) — https://wenxwux.github.io/conduit-blog/ko/
+- Español (es) — https://wenxwux.github.io/conduit-blog/es/
 
 ## About
 

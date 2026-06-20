@@ -1,20 +1,28 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import {
+  LOCALES, localeOf, HREFLANG, DEFAULT_LOCALE, type LocaleCode,
+} from '../i18n/config';
 
 interface Props {
   title: string;
   description: string;
-  lang?: 'zh' | 'en';
+  lang?: LocaleCode;
   cover?: string;
   type?: 'website' | 'article';
-  altSlug?: string;        // 对应另一语言的同篇 slug，用于 hreflang
+  altSlug?: string;        // 对应各语言的同篇 slug，用于 hreflang
   keywords?: string[];
+  availableLocales?: LocaleCode[];
 }
 const {
   title, description, lang = 'zh', cover,
   type = 'website', altSlug, keywords = [],
+  availableLocales = LOCALES.map((l) => l.code),
 } = Astro.props;
+
+const meta = localeOf(lang);
+const htmlLang = meta.htmlLang;
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -22,14 +30,41 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImage = cover
   ? (cover.startsWith('http') ? cover : site + base + cover)
   : site + base + '/og-default.png';
-const htmlLang = lang === 'zh' ? 'zh-CN' : 'en';
 
-// hreflang：若提供 altSlug，互指中英双语版本
-const zhUrl = altSlug ? `${site}${base}/blog/${altSlug}` : `${site}${base}/`;
-const enUrl = altSlug ? `${site}${base}/en/blog/${altSlug}` : `${site}${base}/en/`;
+// hreflang / 备用 URL：只对真实存在该篇的语言输出
+const urlFor = (c: LocaleCode) => {
+  const p = localeOf(c).urlPrefix;
+  return altSlug ? `${site}${base}${p}/blog/${altSlug}` : `${site}${base}${p}/`;
+};
+const alts = LOCALES.filter((l) => availableLocales.includes(l.code));
+const xDefaultCode: LocaleCode = availableLocales.includes(DEFAULT_LOCALE)
+  ? DEFAULT_LOCALE
+  : (alts[0]?.code ?? DEFAULT_LOCALE);
+
+const mainLd = {
+  '@context': 'https://schema.org',
+  '@type': type === 'article' ? 'Article' : 'WebSite',
+  headline: title,
+  description,
+  inLanguage: htmlLang,
+  url: canonical,
+  image: ogImage,
+  publisher: { '@type': 'Organization', name: 'Conduit AI', url: 'https://conduitai.slateatelier.com' },
+};
+const breadcrumbLd = type === 'article'
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: meta.label, item: `${site}${base}${meta.urlPrefix}/` },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}${base}${meta.urlPrefix}/blog` },
+        { '@type': 'ListItem', position: 3, name: title, item: canonical },
+      ],
+    }
+  : null;
 ---
 <!doctype html>
-<html lang={htmlLang}>
+<html lang={htmlLang} dir={meta.dir}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,10 +75,11 @@ const enUrl = altSlug ? `${site}${base}/en/blog/${altSlug}` : `${site}${base}/en
     <link rel="icon" type="image/svg+xml" href={base + '/favicon.svg'} />
     <link rel="sitemap" href={base + '/sitemap-index.xml'} />
 
-    <!-- hreflang 双语互指 -->
-    <link rel="alternate" hreflang="zh-CN" href={zhUrl} />
-    <link rel="alternate" hreflang="en" href={enUrl} />
-    <link rel="alternate" hreflang="x-default" href={zhUrl} />
+    <!-- hreflang：仅对真实存在该篇的语言互指 -->
+    {alts.map((l) => (
+      <link rel="alternate" hreflang={HREFLANG[l.code]} href={urlFor(l.code)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={urlFor(xDefaultCode)} />
 
     <!-- Open Graph -->
     <meta property="og:type" content={type} />
@@ -51,7 +87,10 @@ const enUrl = altSlug ? `${site}${base}/en/blog/${altSlug}` : `${site}${base}/en
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+    <meta property="og:locale" content={meta.ogLocale} />
+    {alts.filter((l) => l.code !== lang).map((l) => (
+      <meta property="og:locale:alternate" content={l.ogLocale} />
+    ))}
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -60,15 +99,10 @@ const enUrl = altSlug ? `${site}${base}/en/blog/${altSlug}` : `${site}${base}/en
     <meta name="twitter:image" content={ogImage} />
 
     <!-- JSON-LD -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': type === 'article' ? 'Article' : 'WebSite',
-      headline: title,
-      description,
-      inLanguage: htmlLang,
-      url: canonical,
-      image: ogImage,
-    })} />
+    <script type="application/ld+json" set:html={JSON.stringify(mainLd)} />
+    {breadcrumbLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+    )}
 
     <link rel="stylesheet" href={base + '/styles/global.css'} />
   </head>

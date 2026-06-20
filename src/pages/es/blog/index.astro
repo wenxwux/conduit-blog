@@ -1,34 +1,24 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { UI } from '../i18n/config';
+import { UI } from '../../../i18n/config';
 
-const lang = 'zh' as const;
+const lang = 'es' as const;
 const t = UI[lang];
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
+const posts = (await getCollection('blog-es', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
-<BaseLayout
-  title={t.homeMeta.title}
-  description={t.homeMeta.desc}
-  lang={lang}
-  keywords={t.homeMeta.keywords}
->
-  <section class="hero">
-    <h1>{t.home.h1}</h1>
-    <p set:html={t.home.sub} />
-  </section>
-
+<BaseLayout title={t.blogIndexMeta.title} description={t.blogIndexMeta.desc} lang={lang}>
   <section class="list">
-    <h2>{t.home.latest}</h2>
+    <h1>{t.blogIndex.h1}</h1>
     {posts.length === 0 ? (
-      <p class="empty">{t.home.empty}</p>
+      <p class="empty">{t.blogIndex.empty}</p>
     ) : (
       <ul>
         {posts.map((p) => (
           <li>
-            <a href={`${base}/blog/${p.slug}`}>
+            <a href={`${base}/es/blog/${p.slug}`}>
               <span class="t">{p.data.title}</span>
               <span class="d">{p.data.description}</span>
             </a>
@@ -40,11 +30,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 </BaseLayout>
 
 <style>
-  .hero { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.2rem 1rem; }
-  .hero h1 { font-size: 2.2rem; letter-spacing: -0.03em; margin: 0 0 0.8rem; }
-  .hero p { color: var(--text-soft); font-size: 1.05rem; margin: 0; }
-  .list { max-width: 760px; margin: 0 auto; padding: 1.5rem 1.2rem; }
-  .list h2 { font-size: 1.2rem; margin: 0 0 1rem; }
+  .list { max-width: 760px; margin: 0 auto; padding: 2rem 1.2rem; }
+  .list h1 { font-size: 1.8rem; margin: 0 0 1.2rem; }
   .list ul { list-style: none; padding: 0; margin: 0; }
   .list li { border-top: 1px solid var(--border); }
   .list a { display: flex; flex-direction: column; gap: 0.25rem; padding: 1rem 0; text-decoration: none; }

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import SoftCTA from '../components/SoftCTA.astro';
+import { localeOf, UI, type LocaleCode } from '../i18n/config';
 
 interface Props {
   title: string;
@@ -10,15 +11,16 @@ interface Props {
   tags?: string[];
   cover?: string;
   keywords?: string[];
-  lang?: 'zh' | 'en';
+  lang?: LocaleCode;
   altSlug?: string;
+  availableLocales?: LocaleCode[];
 }
 const {
   title, description, pubDate, updatedDate,
-  tags = [], cover, keywords = [], lang = 'zh', altSlug,
+  tags = [], cover, keywords = [], lang = 'zh', altSlug, availableLocales,
 } = Astro.props;
 
-const locale = lang === 'zh' ? 'zh-CN' : 'en-US';
+const locale = localeOf(lang).dateLocale;
 const fmt = (d: Date) => d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 <BaseLayout
@@ -29,13 +31,14 @@ const fmt = (d: Date) => d.toLocaleDateString(locale, { year: 'numeric', month: 
   type="article"
   altSlug={altSlug}
   keywords={keywords}
+  availableLocales={availableLocales}
 >
   <article class="post">
     <header>
       <h1>{title}</h1>
       <p class="meta">
         <time datetime={pubDate.toISOString()}>{fmt(pubDate)}</time>
-        {updatedDate && <span>· {lang === 'zh' ? '更新于' : 'Updated'} {fmt(updatedDate)}</span>}
+        {updatedDate && <span>· {UI[lang].updatedLabel} {fmt(updatedDate)}</span>}
       </p>
       {tags.length > 0 && (
         <ul class="tags">{tags.map((t) => <li>#{t}</li>)}</ul>

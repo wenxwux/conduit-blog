@@ -1,20 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { UI } from '../../i18n/config';
 
+const lang = 'zh' as const;
+const t = UI[lang];
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
-<BaseLayout
-  title="全部文章 — Conduit AI Blog"
-  description="Conduit AI Blog 全部 AI 工具教程与成本优化文章列表。"
-  lang="zh"
->
+<BaseLayout title={t.blogIndexMeta.title} description={t.blogIndexMeta.desc} lang={lang}>
   <section class="list">
-    <h1>全部文章</h1>
+    <h1>{t.blogIndex.h1}</h1>
     {posts.length === 0 ? (
-      <p class="empty">文章马上就来 ✨</p>
+      <p class="empty">{t.blogIndex.empty}</p>
     ) : (
       <ul>
         {posts.map((p) => (

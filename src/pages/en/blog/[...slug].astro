@@ -1,16 +1,17 @@
 ---
 import PostLayout from '../../../layouts/PostLayout.astro';
 import { getCollection } from 'astro:content';
+import { availableLocalesFor } from '../../../i18n/posts';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog-en', ({ data }) => !data.draft);
-  return posts.map((post) => ({
+  return Promise.all(posts.map(async (post) => ({
     params: { slug: post.slug },
-    props: { post },
-  }));
+    props: { post, availableLocales: await availableLocalesFor(post.slug) },
+  })));
 }
 
-const { post } = Astro.props;
+const { post, availableLocales } = Astro.props;
 const { Content } = await post.render();
 const d = post.data;
 ---
@@ -24,6 +25,7 @@ const d = post.data;
   keywords={d.keywords}
   lang="en"
   altSlug={post.slug}
+  availableLocales={availableLocales}
 >
   <Content />
 </PostLayout>

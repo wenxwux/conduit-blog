@@ -1,14 +1,12 @@
 ---
-interface Props { lang?: 'zh' | 'en'; }
+import { UI, type LocaleCode } from '../i18n/config';
+interface Props { lang?: LocaleCode; }
 const { lang = 'zh' } = Astro.props;
 const year = new Date().getFullYear();
+const text = UI[lang].footer.replace('{year}', String(year));
 ---
 <footer>
-  <p>
-    {lang === 'zh'
-      ? `© ${year} Conduit AI Blog · AI 工具与工作流教程`
-      : `© ${year} Conduit AI Blog · AI tools & workflow guides`}
-  </p>
+  <p>{text}</p>
 </footer>
 
 <style>
